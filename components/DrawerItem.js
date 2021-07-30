@@ -13,8 +13,38 @@ class DrawerItem extends React.Component {
       case "Home":
         return (
           <Icon
-            name="app2x"
-            family="NowExtra"
+            name="home"
+            family="MaterialIcons"
+            size={18}
+            color={focused ? nowTheme.COLORS.PRIMARY : "white"}
+            style={{ opacity: 0.5 }}
+          />
+        );
+      case "Timeline":
+        return (
+          <Icon
+            name="query-builder"
+            family="MaterialIcons"
+            size={18}
+            color={focused ? nowTheme.COLORS.PRIMARY : "white"}
+            style={{ opacity: 0.5 }}
+          />
+        );
+      case "Travel":
+        return (
+          <Icon
+            name="flight"
+            family="MaterialIcons"
+            size={18}
+            color={focused ? nowTheme.COLORS.PRIMARY : "white"}
+            style={{ opacity: 0.5 }}
+          />
+        );
+      case "Friends":
+        return (
+          <Icon
+            name="group"
+            family="MaterialIcons"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : "white"}
             style={{ opacity: 0.5 }}
