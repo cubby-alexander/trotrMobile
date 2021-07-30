@@ -47,7 +47,7 @@ class Header extends React.Component {
   };
   renderRight = () => {
     const { white, title, navigation } = this.props;
-    
+
 
     if (title === 'Title') {
       return [
@@ -140,8 +140,8 @@ class Header extends React.Component {
               style={{ paddingRight: 8 }}
               color={nowTheme.COLORS.HEADER}
             />
-            <Text style={{ fontFamily: 'montserrat-regular' }} size={16} style={styles.tabTitle}>
-              {optionLeft || 'Beauty'}
+            <Text size={16} style={styles.tabTitle}>
+              {optionLeft || 'Fruity'}
             </Text>
           </Block>
         </Button>
@@ -154,7 +154,7 @@ class Header extends React.Component {
               style={{ paddingRight: 8 }}
               color={nowTheme.COLORS.HEADER}
             />
-            <Text style={{ fontFamily: 'montserrat-regular' }} size={16} style={styles.tabTitle}>
+            <Text size={16} style={styles.tabTitle}>
               {optionRight || 'Fashion'}
             </Text>
           </Block>
@@ -307,6 +307,7 @@ const styles = StyleSheet.create({
   tabTitle: {
     lineHeight: 19,
     fontWeight: '400',
+    fontFamily: 'proxima-nova',
     color: nowTheme.COLORS.HEADER
   },
   social: {

@@ -27,6 +27,9 @@ function CustomDrawerContent({
   const insets = useSafeArea();
   const screens = [
     "Home",
+    "Timeline",
+    "Travel",
+    "Friends",
     "Components",
     "Articles",
     "Profile",
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 28,
-    paddingBottom: theme.SIZES.BASE,
+    paddingBottom: theme.SIZES.BASE * 1.4,
     paddingTop: theme.SIZES.BASE * 3,
     justifyContent: "center"
   },

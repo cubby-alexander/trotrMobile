@@ -8,6 +8,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from '../screens/Home';
 import Pro from '../screens/Pro';
 import Profile from '../screens/Profile';
+import Timeline from "../screens/Timeline";
+import Friends from "../screens/Friends";
+import Travel from "../screens/Travel";
 import Components from '../screens/Components';
 import Articles from '../screens/Articles';
 import Onboarding from '../screens/Onboarding';
@@ -40,6 +43,28 @@ function ArticlesStack(props) {
     <Stack.Navigator initialRouteName="Articles" mode="card" headerMode="screen">
       <Stack.Screen name="Articles" component={Articles} options={{
         header: ({ navigation, scene }) => (<Header title="Articles" navigation={navigation} scene={scene} />),
+        backgroundColor: '#FFFFFF'
+      }} />
+    </Stack.Navigator>
+  );
+}
+
+function TimelineStack(props) {
+  return (
+    <Stack.Navigator initialRouteName="Timeline" mode="card" headerMode="screen">
+      <Stack.Screen name="Timeline" component={Timeline} options={{
+        header: ({ navigation, scene }) => (<Header title="Timeline" navigation={navigation} scene={scene} />),
+        backgroundColor: '#FFFFFF'
+      }} />
+    </Stack.Navigator>
+  );
+}
+
+function TravelStack(props) {
+  return (
+    <Stack.Navigator initialRouteName="Travel" mode="card" headerMode="screen">
+      <Stack.Screen name="Travel" component={Travel} options={{
+        header: ({ navigation, scene }) => (<Header title="Travel" navigation={navigation} scene={scene} />),
         backgroundColor: '#FFFFFF'
       }} />
     </Stack.Navigator>
@@ -149,6 +174,29 @@ function HomeStack(props) {
   );
 }
 
+function FriendsStack(props) {
+  return (
+    <Stack.Navigator mode="card" headerMode="screen">
+      <Stack.Screen
+        name="Friends"
+        component={Friends}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="Friends"
+              search
+              options
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#FFFFFF" }
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function AppStack(props) {
   return (
     <Drawer.Navigator
@@ -181,6 +229,9 @@ function AppStack(props) {
       initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={HomeStack} />
+      <Drawer.Screen name="Timeline" component={TimelineStack} />
+      <Drawer.Screen name="Travel" component={TravelStack} />
+      <Drawer.Screen name="Friends" component={FriendsStack} />
       <Drawer.Screen name="Components" component={ComponentsStack} />
       <Drawer.Screen name="Articles" component={ArticlesStack} />
       <Drawer.Screen name="Profile" component={ProfileStack} />
