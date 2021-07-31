@@ -10,7 +10,6 @@ import {
   StatusBar,
   Dimensions,
   Platform,
-  TouchableHighlight,
   TouchableWithoutFeedback, TouchableNativeFeedback
 } from 'react-native';
 import { Block, Button as GaButton, Button, Checkbox, Text, theme } from 'galio-framework';
