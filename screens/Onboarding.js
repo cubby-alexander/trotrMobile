@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import JWT from "expo-jwt";
-import jwt from "react-native-pure-jwt";
+import storeData from '../helpers/setToken';
 import {JWT_SECRET, BACKEND_URL} from "@env";
 import axios from "axios";
 import {
@@ -44,6 +44,7 @@ export default function Onboarding({navigation}) {
           if (res.data.token) {
             const decoded = JWT.decode(res.data.token, JWT_SECRET);
             console.log(decoded);
+            storeData(decoded);
         }})
     } catch (e) {
       console.log(e);
