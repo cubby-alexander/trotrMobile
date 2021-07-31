@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import JWT from "expo-jwt";
+import jwt from "react-native-pure-jwt";
+import {JWT_SECRET, BACKEND_URL} from "@env";
 import axios from "axios";
 import {
   ImageBackground,
@@ -13,15 +16,98 @@ import {
 import { Block, Button as GaButton, Button, Checkbox, Text, theme } from 'galio-framework';
 
 const { height, width } = Dimensions.get('screen');
-import { Images, nowTheme } from '../constants/';
+import { Images, nowTheme } from '../constants';
 import { HeaderHeight } from '../constants/utils';
 import { Icon, Input } from '../components';
 
-export default class Onboarding extends React.Component {
-  render() {
-    const { navigation } = this.props;
+export default function Onboarding({navigation}) {
+  const [signIn, setSignIn] = useState({
+    email: "",
+    password: "",
+  })
 
-    const globalTokenVariable = "not_arbitrary"
+  console.log(signIn);
+
+  const attemptLogin = async () => {
+    let axiosConfig = {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+    };
+    let user = {
+      email: "hall@gmail.com",
+      password: "ron"
+    };
+    try {
+      await axios.post(`${BACKEND_URL}user/login`, user, axiosConfig)
+        .then((res) => {
+          console.log(res.data.token)
+          if (res.data.token) {
+            const decoded = JWT.decode(res.data.token, JWT_SECRET);
+            console.log(decoded);
+        }})
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const globalTokenVariable = "not_arbitrary";
+
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.COLORS.BLACK,
+      marginTop: Platform.OS === 'android' ? -HeaderHeight : 0
+    },
+    registerContainer: {
+      marginTop: 55,
+      width: width * 0.87,
+      height: height < 812 ? height * 0.5 : height * 0.55,
+      backgroundColor: nowTheme.COLORS.WHITE,
+      borderRadius: 4,
+      shadowColor: nowTheme.COLORS.BLACK,
+      shadowOffset: {
+        width: 0,
+        height: 4
+      },
+      shadowRadius: 8,
+      shadowOpacity: 0.1,
+      elevation: 1,
+      overflow: 'hidden'
+    },
+    padded: {
+      paddingHorizontal: theme.SIZES.BASE * 2,
+      zIndex: 3,
+      position: 'absolute',
+      bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3
+    },
+    button: {
+      width: width - theme.SIZES.BASE * 4,
+      height: theme.SIZES.BASE * 3,
+      shadowRadius: 0,
+      shadowOpacity: 0
+    },
+    inputs: {
+      borderWidth: 1,
+      borderColor: '#E3E3E3',
+      borderRadius: 21.5
+    },
+    inputIcons: {
+      marginRight: 12,
+      color: nowTheme.COLORS.ICON_INPUT
+    },
+    createButton: {
+      width: width * 0.5,
+      marginTop: 25,
+      marginBottom: 30
+    },
+    gradient: {
+      zIndex: 1,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 66
+    }
+  });
 
     return (
       <Block flex style={styles.container}>
@@ -58,6 +144,8 @@ export default class Onboarding extends React.Component {
                         <Block width={width * 0.78} style={{ marginBottom: 5 }}>
                           <Input
                             placeholder="Account Email"
+                            type="default"
+                            onChangeText={(text) => setSignIn(prevState => ({ ...prevState, email: text }))}
                             style={styles.inputs}
                             iconContent={
                               <Icon
@@ -74,12 +162,14 @@ export default class Onboarding extends React.Component {
                           <Input
                             placeholder="Password"
                             style={styles.inputs}
+                            password={true}
+                            onChangeText={(text) => setSignIn(prevState => ({ ...prevState, password: text }))}
                             iconContent={
                               <Icon
                                 size={16}
                                 color="#ADB5BD"
-                                name="caps-small2x"
-                                family="NowExtra"
+                                name="lock"
+                                family="AntDesign"
                                 style={styles.inputIcons}
                               />
                             }
@@ -111,7 +201,10 @@ export default class Onboarding extends React.Component {
                           color="primary"
                           round
                           style={styles.createButton}
-                          onPress={() => navigation.navigate('App')}
+                          onPress={() => {
+                            attemptLogin();
+                            // navigation.navigate('App');
+                          }}
                         >
                           <Text
                             style={{ fontFamily: 'proxima-nova' }}
@@ -209,61 +302,3 @@ export default class Onboarding extends React.Component {
       </Block>
     );
   }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: theme.COLORS.BLACK,
-    marginTop: Platform.OS === 'android' ? -HeaderHeight : 0
-  },
-  registerContainer: {
-    marginTop: 55,
-    width: width * 0.87,
-    height: height < 812 ? height * 0.5 : height * 0.55,
-    backgroundColor: nowTheme.COLORS.WHITE,
-    borderRadius: 4,
-    shadowColor: nowTheme.COLORS.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 4
-    },
-    shadowRadius: 8,
-    shadowOpacity: 0.1,
-    elevation: 1,
-    overflow: 'hidden'
-  },
-  padded: {
-    paddingHorizontal: theme.SIZES.BASE * 2,
-    zIndex: 3,
-    position: 'absolute',
-    bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3
-  },
-  button: {
-    width: width - theme.SIZES.BASE * 4,
-    height: theme.SIZES.BASE * 3,
-    shadowRadius: 0,
-    shadowOpacity: 0
-  },
-  inputs: {
-    borderWidth: 1,
-    borderColor: '#E3E3E3',
-    borderRadius: 21.5
-  },
-  inputIcons: {
-    marginRight: 12,
-    color: nowTheme.COLORS.ICON_INPUT
-  },
-  createButton: {
-    width: width * 0.5,
-    marginTop: 25,
-    marginBottom: 30
-  },
-  gradient: {
-    zIndex: 1,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 66
-  }
-});

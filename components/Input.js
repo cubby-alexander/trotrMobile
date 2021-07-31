@@ -9,7 +9,7 @@ import { nowTheme } from "../constants";
 
 class ArInput extends React.Component {
   render() {
-    const { shadowless, success, error, primary } = this.props;
+    const { shadowless, success, error, primary, password } = this.props;
 
     const inputStyles = [
       styles.input,
@@ -24,6 +24,8 @@ class ArInput extends React.Component {
       <Input
         placeholder="write something here"
         placeholderTextColor={nowTheme.COLORS.MUTED}
+        password={password}
+        viewPass={true}
         style={inputStyles}
         color={nowTheme.COLORS.HEADER}
         iconContent={
@@ -44,14 +46,16 @@ ArInput.defaultProps = {
   shadowless: false,
   success: false,
   error: false,
-  primary: false
+  primary: false,
+  password: false
 };
 
 ArInput.propTypes = {
   shadowless: PropTypes.bool,
   success: PropTypes.bool,
   error: PropTypes.bool,
-  primary: PropTypes.bool
+  primary: PropTypes.bool,
+  password: PropTypes.bool
 }
 
 const styles = StyleSheet.create({
