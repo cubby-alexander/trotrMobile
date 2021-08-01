@@ -37,10 +37,13 @@ function cacheImages(images) {
   });
 }
 
+export const AuthContext = React.createContext({ user: null });
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
-    fontLoaded: false
+    fontLoaded: false,
+    userToken: null
   };
 
   // async componentDidMount() {
@@ -51,6 +54,10 @@ export default class App extends React.Component {
 
   //   this.setState({ fontLoaded: true });
   // }
+
+  handleUserChange(userData) {
+    console.log(userData)
+  }
 
   render() {
     if (!this.state.isLoadingComplete) {
@@ -63,13 +70,15 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <NavigationContainer>
-          <GalioProvider theme={nowTheme}>
-            <Block flex>
-              <Screens />
-            </Block>
-          </GalioProvider>
-        </NavigationContainer>
+        <AuthContext.Provider value={{ user: this.state.userToken, setUser: this.handleUserChange }}>
+          <NavigationContainer>
+            <GalioProvider theme={nowTheme}>
+              <Block flex>
+                <Screens />
+              </Block>
+            </GalioProvider>
+          </NavigationContainer>
+        </AuthContext.Provider>
       );
     }
   }

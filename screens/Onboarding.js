@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../App';
 import JWT from "expo-jwt";
 import storeData from '../helpers/setToken';
 import {JWT_SECRET, BACKEND_URL} from "@env";
@@ -23,8 +24,10 @@ export default function Onboarding({navigation}) {
   const [signIn, setSignIn] = useState({
     email: "",
     password: "",
-  })
+  });
+  const { user, setUser } = useContext(AuthContext);
 
+  console.log(user);
   console.log(signIn);
 
   const attemptLogin = async () => {
@@ -44,6 +47,7 @@ export default function Onboarding({navigation}) {
             const decoded = JWT.decode(res.data.token, JWT_SECRET);
             console.log(decoded);
             storeData(decoded);
+            setUser(decoded);
         }})
     } catch (e) {
       console.log(e);
