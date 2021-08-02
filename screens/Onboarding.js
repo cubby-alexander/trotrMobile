@@ -27,9 +27,6 @@ export default function Onboarding({navigation}) {
   });
   const { user, setUser } = useContext(AuthContext);
 
-  console.log(user);
-  console.log(signIn);
-
   const attemptLogin = async () => {
     let axiosConfig = {
       "Content-Type": "application/json;charset=UTF-8",
@@ -57,10 +54,10 @@ export default function Onboarding({navigation}) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.COLORS.BLACK,
-      marginTop: Platform.OS === 'android' ? -HeaderHeight : 0
+      marginTop: Platform.OS === 'android' ? -HeaderHeight : 0,
     },
     registerContainer: {
-      marginTop: 55,
+      marginTop: height * 0.05,
       width: width * 0.87,
       height: height < 812 ? height * 0.5 : height * 0.55,
       backgroundColor: nowTheme.COLORS.WHITE,
@@ -79,8 +76,9 @@ export default function Onboarding({navigation}) {
       paddingHorizontal: theme.SIZES.BASE * 2,
       zIndex: 3,
       position: 'absolute',
-      bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3
+      bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 8
     },
+    logo: { width: 365, height: 124, bottom: 10, left: 0, right: 0, position: 'absolute' },
     button: {
       width: width - theme.SIZES.BASE * 4,
       height: theme.SIZES.BASE * 3,
@@ -119,10 +117,10 @@ export default function Onboarding({navigation}) {
             source={Images.Pro}
             style={{ flex: 1, height: height, width, zIndex: 1 }}
           />
-          <Block space="start" style={styles.padded}>
+          <Block space="between" style={styles.padded}>
             <Block>
               <Block middle>
-                <Image source={Images.FullLogo} style={{ width: 365, height: 124, bottom: 10, left: 0, right: 0, position: 'absolute' }} />
+                <Image source={Images.FullLogo} style={styles.logo} />
               </Block>
 
               <Block middle style={styles.registerContainer}>
@@ -258,46 +256,6 @@ export default function Onboarding({navigation}) {
                 </Block>
               </Block>
             </Block>
-
-              <Block
-                row
-                style={{
-                  marginTop: theme.SIZES.BASE * 2.5,
-                  marginBottom: theme.SIZES.BASE * 2
-                }}
-              >
-                <Button
-                  shadowless
-                  style={styles.button}
-                  color={nowTheme.COLORS.PRIMARY}
-                  onPress={async () => {
-                    console.log("Axios call");
-                    // let axiosConfig = {
-                    //   headers: {
-                    //     'Content-Type': 'application/json;char=UTF-8',
-                    //     "Access-Control-Allow-Origin": "*",
-                    //     'Authorization': `Bearer ${globalTokenVariable}`
-                    //   }
-                    // };
-                    // await axios.post('http://localhost:3000/user/', {
-                    //   "name": "Ron Luc",
-                    //   "avatar": "file.jpg",
-                    //   "email": "hall@gmail.com",
-                    //   "password": "Bon Appetite",
-                    //   "trips": []
-                    // }, axiosConfig).then((res) => console.log(res))
-                    //   .catch(e => console.log(e));
-                    clearData();
-                  }}
-                >
-                  <Text
-                    style={{ fontFamily: 'montserrat-bold', fontSize: 14 }}
-                    color={theme.COLORS.WHITE}
-                  >
-                    Dump token
-                  </Text>
-                </Button>
-              </Block>
             </Block>
           </Block>
         </Block>

@@ -150,13 +150,7 @@ class DrawerItem extends React.Component {
           return (
             <TouchableOpacity
               style={{ height: 60 }}
-              onPress={() => props.setUser()
-                // title == "GETTING STARTED"
-                //   ? Linking.openURL(
-                //       "https://demos.creative-tim.com/now-ui-pro-react-native/docs/"
-                //     ).catch(err => console.error("An error occurred", err))
-                //   : navigation.navigate(title == 'LOGOUT' ? 'Onboarding' : title)
-              }
+              onPress={() => title === "LOGOUT" ? props.setUser() : navigation.navigate(title)}
             >
               <Block flex row style={containerStyles}>
                 <Block middle flex={0.1} style={{ marginRight: 5 }}>

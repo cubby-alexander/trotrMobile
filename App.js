@@ -57,7 +57,8 @@ export default class App extends React.Component {
     try {
       await getData().then(storage => {
         let user = JSON.parse(storage);
-        console.log(user.foundUser, "Here's your mount");
+        console.log(user.foundUser, "This is the user data found when App.js mounts, and it's being set to" +
+          "userToken state.");
         this.setState({...this.state, userToken: user.foundUser });
       })
     } catch (e) {
@@ -66,11 +67,10 @@ export default class App extends React.Component {
   }
 
   handleUserChange(userData) {
-    console.log(userData);
     if (userData) {
       this.setState({userToken: userData })
     } else {
-      console.log("This is happening")
+      console.log("Handle user change is clearing state context in App.js")
       this.setState({userToken: null })
     }
   }

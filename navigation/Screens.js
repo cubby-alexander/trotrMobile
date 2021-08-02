@@ -245,7 +245,7 @@ export default function OnboardingStack(props) {
   const [isSignout, setIsSignout] = useState(false);
   const { user } = useContext(AuthContext);
 
-  console.log("Hi there", user);
+  console.log("Hi there, this is the context user reported by Screens.js:", user);
 
   return (
     <Stack.Navigator mode="card" headerMode="none">
