@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../constants/AuthContext';
 import { Block } from "galio-framework";
 import { Easing, Animated, Dimensions } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -241,23 +242,30 @@ function AppStack(props) {
 }
 
 export default function OnboardingStack(props) {
+  const [isSignout, setIsSignout] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  console.log("Hi there, this is the context user reported by Screens.js:", user);
+
   return (
     <Stack.Navigator mode="card" headerMode="none">
-      <Stack.Screen
-        name="Onboarding"
+      {!user && <Stack.Screen
+        name='Onboarding'
         component={Onboarding}
         option={{
-          headerTransparent: true
+          headerTransparent: true,
+          animationTypeForReplace: isSignout ? 'pop' : 'push'
         }}
-      />
-      <Stack.Screen
-        name="SignUp"
+      />}
+      {!user && <Stack.Screen
+        name='SignUp'
         component={SignUp}
         option={{
-          headerTransparent: true
+          headerTransparent: true,
+          animationTypeForReplace: isSignout ? 'pop' : 'push'
         }}
-      />
-      <Stack.Screen name="App" component={AppStack} />
+      />}
+      {user !== null && <Stack.Screen name='App' component={AppStack} />}
     </Stack.Navigator>
   );
 }

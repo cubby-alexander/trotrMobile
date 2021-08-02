@@ -5,9 +5,11 @@ import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import { Block, GalioProvider } from 'galio-framework';
 import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from './constants/AuthContext';
 
 import Screens from './navigation/Screens';
 import { Images, articles, nowTheme } from './constants';
+import { getData } from './helpers/tokenStorage';
 
 // cache app images
 const assetImages = [
@@ -38,19 +40,40 @@ function cacheImages(images) {
 }
 
 export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-    fontLoaded: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+      fontLoaded: false,
+      userToken: null
+    };
+    this.handleUserChange = this.handleUserChange.bind(this);
+  }
 
-  // async componentDidMount() {
-  //   Font.loadAsync({
-  //     'montserrat-regular': require('./assets/font/Montserrat-Regular.ttf'),
-  //     'montserrat-bold': require('./assets/font/Montserrat-Bold.ttf')
-  //   });
 
-  //   this.setState({ fontLoaded: true });
-  // }
+
+
+  async componentDidMount() {
+    try {
+      await getData().then(storage => {
+        let user = JSON.parse(storage);
+        console.log(user.foundUser, "This is the user data found when App.js mounts, and it's being set to" +
+          "userToken state.");
+        this.setState({...this.state, userToken: user.foundUser });
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  handleUserChange(userData) {
+    if (userData) {
+      this.setState({userToken: userData })
+    } else {
+      console.log("Handle user change is clearing state context in App.js")
+      this.setState({userToken: null })
+    }
+  }
 
   render() {
     if (!this.state.isLoadingComplete) {
@@ -63,13 +86,15 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <NavigationContainer>
-          <GalioProvider theme={nowTheme}>
-            <Block flex>
-              <Screens />
-            </Block>
-          </GalioProvider>
-        </NavigationContainer>
+        <AuthProvider value={{ user: this.state.userToken, setUser: this.handleUserChange }}>
+          <NavigationContainer>
+            <GalioProvider theme={nowTheme}>
+              <Block flex>
+                <Screens />
+              </Block>
+            </GalioProvider>
+          </NavigationContainer>
+        </AuthProvider>
       );
     }
   }
@@ -84,7 +109,7 @@ export default class App extends React.Component {
       'montserrat-bold': require('./assets/font/Montserrat-Bold.ttf')
     });
 
-    this.setState({ fontLoaded: true });
+    this.setState({fontLoaded: true });
     return Promise.all([...cacheImages(assetImages)]);
   };
 
