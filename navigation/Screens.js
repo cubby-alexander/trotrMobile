@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AuthContext } from '../App';
+import { AuthContext } from '../constants/AuthContext';
 import { Block } from "galio-framework";
 import { Easing, Animated, Dimensions } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";

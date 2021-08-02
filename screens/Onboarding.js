@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../App';
+import { AuthContext } from '../constants/AuthContext';
 import JWT from "expo-jwt";
-import storeData from '../helpers/setToken';
+import { clearData, storeData } from '../helpers/tokenStorage';
 import {JWT_SECRET, BACKEND_URL} from "@env";
 import axios from "axios";
 import {
@@ -42,10 +42,8 @@ export default function Onboarding({navigation}) {
     try {
       await axios.post(`${BACKEND_URL}user/login`, user, axiosConfig)
         .then((res) => {
-          console.log(res.data.token)
           if (res.data.token) {
             const decoded = JWT.decode(res.data.token, JWT_SECRET);
-            console.log(decoded);
             storeData(decoded);
             setUser(decoded);
         }})
@@ -274,29 +272,29 @@ export default function Onboarding({navigation}) {
                   color={nowTheme.COLORS.PRIMARY}
                   onPress={async () => {
                     console.log("Axios call");
-                    let axiosConfig = {
-                      headers: {
-                        'Content-Type': 'application/json;char=UTF-8',
-                        "Access-Control-Allow-Origin": "*",
-                        'Authorization': `Bearer ${globalTokenVariable}`
-                      }
-                    };
-                    await axios.post('http://localhost:3000/user/', {
-                      "name": "Ron Luc",
-                      "avatar": "file.jpg",
-                      "email": "hall@gmail.com",
-                      "password": "Bon Appetite",
-                      "trips": []
-                    }, axiosConfig).then((res) => console.log(res))
-                      .catch(e => console.log(e));
-                    navigation.navigate('App');
+                    // let axiosConfig = {
+                    //   headers: {
+                    //     'Content-Type': 'application/json;char=UTF-8',
+                    //     "Access-Control-Allow-Origin": "*",
+                    //     'Authorization': `Bearer ${globalTokenVariable}`
+                    //   }
+                    // };
+                    // await axios.post('http://localhost:3000/user/', {
+                    //   "name": "Ron Luc",
+                    //   "avatar": "file.jpg",
+                    //   "email": "hall@gmail.com",
+                    //   "password": "Bon Appetite",
+                    //   "trips": []
+                    // }, axiosConfig).then((res) => console.log(res))
+                    //   .catch(e => console.log(e));
+                    clearData();
                   }}
                 >
                   <Text
                     style={{ fontFamily: 'montserrat-bold', fontSize: 14 }}
                     color={theme.COLORS.WHITE}
                   >
-                    GET STARTED
+                    Dump token
                   </Text>
                 </Button>
               </Block>
