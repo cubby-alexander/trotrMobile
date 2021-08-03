@@ -5,6 +5,7 @@ import { Block, Text, theme } from "galio-framework";
 
 import Icon from "./Icon";
 import nowTheme from "../constants/Theme";
+import { clearData } from '../helpers/tokenStorage';
 
 class DrawerItem extends React.Component {
 
@@ -136,6 +137,11 @@ class DrawerItem extends React.Component {
     }
   };
 
+  logout(props) {
+    clearData();
+    props.setUser();
+  }
+
   render() {
     const { focused, title, navigation } = this.props;
 
@@ -150,7 +156,7 @@ class DrawerItem extends React.Component {
           return (
             <TouchableOpacity
               style={{ height: 60 }}
-              onPress={() => title === "LOGOUT" ? props.setUser() : navigation.navigate(title)}
+              onPress={() => title === "LOGOUT" ? this.logout(props) : navigation.navigate(title)}
             >
               <Block flex row style={containerStyles}>
                 <Block middle flex={0.1} style={{ marginRight: 5 }}>
