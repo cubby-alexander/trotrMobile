@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../constants/AuthContext';
 import { Block } from "galio-framework";
 import { Easing, Animated, Dimensions } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -7,14 +8,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // screens
 import Home from '../screens/Home';
 import Pro from '../screens/Pro';
+import Setup from '../screens/Setup/Settings.js';
 import Profile from '../screens/Profile';
 import Timeline from "../screens/Timeline";
 import Friends from "../screens/Friends";
 import Travel from "../screens/Travel";
 import Components from '../screens/Components';
 import Articles from '../screens/Articles';
-import Onboarding from '../screens/Onboarding';
-import SignUp from '../screens/SignUp';
+import Onboarding from '../screens/Onboarding/Onboarding';
+import SignUp from '../screens/SignUp/SignUp';
 import SettingsScreen from '../screens/Settings';
 // drawer
 import CustomDrawerContent from "./Menu";
@@ -135,43 +137,50 @@ function ProfileStack(props) {
 }
 
 function HomeStack(props) {
-  return (
-    <Stack.Navigator mode="card" headerMode="screen">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title="Home"
-              search
-              options
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: "#FFFFFF" }
-        }}
-      />
-      <Stack.Screen
-        name="Pro"
-        component={Pro}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=""
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true
-        }}
-      />
-    </Stack.Navigator>
-  );
+  const { user } = useContext(AuthContext);
+
+  if (user) {
+    return (
+      <Stack.Navigator mode='card' headerMode='screen'>
+        {!user.hasOwnProperty('domestic') && <Stack.Screen
+          name='Account Setup'
+          component={Setup}
+          options={{
+            header: ({ navigation, scene }) => (
+              <Header
+                title='Account Setup'
+                white
+                logo
+                bgColor={nowTheme.COLORS.PRIMARY}
+                logout
+                navigation={navigation}
+                scene={scene}
+              />
+            ),
+            headerTransparent: true
+          }}
+        />}
+        <Stack.Screen
+          name='Home'
+          component={Home}
+          options={{
+            header: ({ navigation, scene }) => (
+              <Header
+                title='Home'
+                search
+                options
+                navigation={navigation}
+                scene={scene}
+              />
+            ),
+            cardStyle: { backgroundColor: '#FFFFFF' }
+          }}
+        />
+      </Stack.Navigator>
+    );
+  } else {
+    return null;
+  }
 }
 
 function FriendsStack(props) {
@@ -241,23 +250,30 @@ function AppStack(props) {
 }
 
 export default function OnboardingStack(props) {
+  const [isSignout, setIsSignout] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  console.log("Hi there, this is the context user reported by Screens.js:", user);
+
   return (
     <Stack.Navigator mode="card" headerMode="none">
-      <Stack.Screen
-        name="Onboarding"
+      {!user && <Stack.Screen
+        name='Onboarding'
         component={Onboarding}
         option={{
-          headerTransparent: true
+          headerTransparent: true,
+          animationTypeForReplace: isSignout ? 'pop' : 'push'
         }}
-      />
-      <Stack.Screen
-        name="SignUp"
+      />}
+      {!user && <Stack.Screen
+        name='SignUp'
         component={SignUp}
         option={{
-          headerTransparent: true
+          headerTransparent: true,
+          animationTypeForReplace: isSignout ? 'pop' : 'push'
         }}
-      />
-      <Stack.Screen name="App" component={AppStack} />
+      />}
+      {user !== null && <Stack.Screen name='App' component={AppStack} />}
     </Stack.Navigator>
   );
 }

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard } from 'react-native';
+import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard, Alert, Image } from 'react-native';
 import { Button, Block, NavBar, Text, theme, Button as GaButton } from 'galio-framework';
 
 import Icon from './Icon';
 import Input from './Input';
 import Tabs from './Tabs';
 import nowTheme from '../constants/Theme';
+import { AuthContext } from '../constants/AuthContext';
+import Images from '../constants/Images';
 
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () =>
@@ -15,7 +17,7 @@ const iPhoneX = () =>
 const BellButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
     style={[styles.button, style]}
-    onPress={() => navigation.navigate('Pro')}
+    onPress={() => navigation.navigate('Account Setup')}
   >
     <Icon
       family="NowExtra"
@@ -28,7 +30,7 @@ const BellButton = ({ isWhite, style, navigation }) => (
 );
 
 const BasketButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Account Setup')}>
     <Icon
       family="NowExtra"
       size={16}
@@ -38,17 +40,80 @@ const BasketButton = ({ isWhite, style, navigation }) => (
   </TouchableOpacity>
 );
 
+const Logout = ({ isWhite, style, navigation, logoutClick }) => (
+  <TouchableOpacity style={[styles.button, style]} onPress={() => logoutClick()}>
+    <Icon
+      family="NowExtra"
+      size={16}
+      name="share"
+      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+    />
+  </TouchableOpacity>
+);
 
 
-class Header extends React.Component {
-  handleLeftPress = () => {
-    const { back, navigation } = this.props;
-    return back ? navigation.goBack() : navigation.openDrawer();
+
+function Header (
+  {
+    back,
+    title,
+    white,
+    transparent,
+    bgColor,
+    iconColor,
+    titleColor,
+    navigation,
+    logout,
+    logo,
+    options,
+    optionLeft,
+    optionRight,
+    ...props
+  }
+) {
+  const {setUser} = useContext(AuthContext);
+
+  const handleLeftPress = () => {
+    if (back) {
+      return navigation.goBack()
+    } else if (logout) {
+      Alert.alert(
+        "Are you sure you want to log out?",
+        "None of your account information will be saved if you log out during setup.",
+        [
+          { text: "Logout", onPress: () => setUser() },
+          { text: "Finish Setup", onPress: () => console.log("Cancel pressed")},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      return navigation.openDrawer();
+    }
   };
-  renderRight = () => {
-    const { white, title, navigation } = this.props;
 
+  const renderLeftIcon = () => {
+    if (back) {
+      return 'minimal-left2x'
+    } else if (logout) {
+      return null
+    } else {
+      return 'align-left-22x'
+    }
+  }
 
+  const logoutClick = () => {
+    Alert.alert(
+      "Are you sure you want to log out?",
+      "None of your account information will be saved if you log out during setup.",
+      [
+        { text: "Logout", onPress: () => setUser() },
+        { text: "Finish Setup", onPress: () => console.log("Cancel pressed")},
+      ],
+      { cancelable: false }
+    );
+  }
+
+  const renderRight = () => {
     if (title === 'Title') {
       return [
         <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
@@ -102,12 +167,16 @@ class Header extends React.Component {
           <BellButton key="chat-search" navigation={navigation} isWhite={white} />,
           <BasketButton key="basket-search" navigation={navigation} isWhite={white} />
         ];
+      case 'Account Setup':
+        return [
+          <Logout key="chat-search" navigation={navigation} isWhite={white} logoutClick={logoutClick} />,
+        ];
       default:
         break;
     }
   };
-  renderSearch = () => {
-    const { navigation } = this.props;
+
+  const renderSearch = () => {
     return (
       <Input
         right
@@ -115,22 +184,20 @@ class Header extends React.Component {
         style={styles.search}
         placeholder="What are you looking for?"
         placeholderTextColor={'#8898AA'}
-        onFocus={() => {Keyboard.dismiss(); navigation.navigate('Pro')}}
+        onFocus={() => {Keyboard.dismiss(); navigation.navigate('Account Setup')}}
         iconContent={
           <Icon size={16} color={theme.COLORS.MUTED} name="zoom-bold2x" family="NowExtra" />
         }
       />
     );
   };
-  renderOptions = () => {
-    const { navigation, optionLeft, optionRight } = this.props;
-
+  const renderOptions = () => {
     return (
       <Block row style={styles.options}>
         <Button
           shadowless
           style={[styles.tab, styles.divider]}
-          onPress={() => console.log(navigation.navigate('Pro'))}
+          onPress={() => console.log(navigation.navigate('Account Setup'))}
         >
           <Block row middle>
             <Icon
@@ -145,7 +212,7 @@ class Header extends React.Component {
             </Text>
           </Block>
         </Button>
-        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Account Setup')}>
           <Block row middle>
             <Icon
               size={18}
@@ -163,8 +230,8 @@ class Header extends React.Component {
     );
   };
 
-  renderTabs = () => {
-    const { tabs, tabIndex, navigation } = this.props;
+  const renderTabs = () => {
+    const { tabs, tabIndex } = props;
     const defaultTab = tabs && tabs[0] && tabs[0].id;
 
     if (!tabs) return null;
@@ -177,30 +244,19 @@ class Header extends React.Component {
       />
     );
   };
-  renderHeader = () => {
-    const { search, options, tabs } = this.props;
+
+  const renderHeader = () => {
+    const { search, options, tabs } = props;
     if (search || tabs || options) {
       return (
         <Block center>
-          {search ? this.renderSearch() : null}
-          {options ? this.renderOptions() : null}
-          {tabs ? this.renderTabs() : null}
+          {search ? renderSearch() : null}
+          {options ? renderOptions() : null}
+          {tabs ? renderTabs() : null}
         </Block>
       );
     }
   };
-  render() {
-    const {
-      back,
-      title,
-      white,
-      transparent,
-      bgColor,
-      iconColor,
-      titleColor,
-      navigation,
-      ...props
-    } = this.props;
 
     const noShadow = ['Search', 'Categories', 'Deals', 'Pro', 'Profile'].includes(title);
     const headerStyles = [
@@ -217,14 +273,13 @@ class Header extends React.Component {
           title={title}
           style={navbarStyles}
           transparent={transparent}
-          right={this.renderRight()}
+          right={renderRight()}
           rightStyle={{ alignItems: 'center' }}
-          left={
-            <Icon
-              name={back ? 'minimal-left2x' : 'align-left-22x'}
+          left={<Icon
+              name={renderLeftIcon()}
               family="NowExtra"
               size={16}
-              onPress={this.handleLeftPress}
+              onPress={handleLeftPress}
               color={iconColor || (white ? nowTheme.COLORS.WHITE : nowTheme.COLORS.ICON)}
             />
           }
@@ -236,10 +291,9 @@ class Header extends React.Component {
           ]}
           {...props}
         />
-        {this.renderHeader()}
+        {renderHeader()}
       </Block>
     );
-  }
 }
 
 const styles = StyleSheet.create({

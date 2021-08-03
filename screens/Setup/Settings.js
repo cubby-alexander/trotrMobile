@@ -4,12 +4,15 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  ScrollView
-} from "react-native";
+  ScrollView, Dimensions,
+  StatusBar
+} from 'react-native';
 import { Block, Text, theme, Icon } from "galio-framework";
-import { Switch } from "../components";
+import { Switch } from "../../components";
 
-import nowTheme from "../constants/Theme";
+import nowTheme from "../../constants/Theme";
+
+const {height, width} = Dimensions.get("screen");
 
 export default function Settings(props) {
   const [state, setState] = useState({tabId: 'photo'});
@@ -30,7 +33,9 @@ export default function Settings(props) {
       case "switch":
         return (
           <Block row middle space="between" style={styles.rows}>
-            <Text style={{ fontFamily: 'proxima-nova' }} size={14} color="#525F7F">{item.title}</Text>
+            <Text style={{ fontFamily: 'proxima-nova' }} size={14} color="#525F7F">
+              {item.title}
+            </Text>
             <Switch
               onValueChange={() => toggleSwitch(item.id)}
               value={state[item.id]}
@@ -64,7 +69,7 @@ export default function Settings(props) {
     ];
 
     const payment = [
-      { title: "Manage Payment Options", id: "Payment", type: "button" },
+      { title: "Manage Payment Optionss", id: "Payment", type: "button" },
       { title: "Manage Gift Cards", id: "gift", type: "button" }
     ];
 
@@ -75,7 +80,30 @@ export default function Settings(props) {
     ];
 
     return (
-      <Block>
+      <Block style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Block center style={styles.mainTitle}>
+          <Text size={24} style={{ fontFamily: 'proxima-nova' }} color={nowTheme.COLORS.TEXT}>
+            Hi there!
+          </Text>
+
+          <Text
+            size={16}
+            style={{fontFamily: 'proxima-nova', marginTop: height * 0.03, width: width * 0.9}}
+            color={nowTheme.COLORS.TEXT}
+          >
+            This looks like a new account. Can we get started with some basic information?
+          </Text>
+
+          <Text
+            size={16}
+            style={{fontFamily: 'proxima-nova', marginTop: height * 0.03, width: width * 0.9}}
+            color={nowTheme.COLORS.TEXT}
+          >
+            You can change all these settings later, but we need them before you access the rest of the app.
+          </Text>
+        </Block>
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.settings}
@@ -129,8 +157,15 @@ export default function Settings(props) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: theme.SIZES.BASE
+  },
   settings: {
     paddingVertical: theme.SIZES.BASE / 3
+  },
+  mainTitle: {
+    paddingBottom: theme.SIZES.BASE,
+    marginTop: height * 0.2,
   },
   title: {
     paddingTop: theme.SIZES.BASE,
