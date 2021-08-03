@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    backgroundColor: nowTheme.COLORS.ACTIVE,
+    backgroundColor: nowTheme.COLORS.PRIMARY,
     borderRadius: 21,
     marginRight: 9,
     paddingHorizontal: 10,

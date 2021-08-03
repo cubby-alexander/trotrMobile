@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard, Alert } from 'react-native';
+import { TouchableOpacity, StyleSheet, Platform, Dimensions, Keyboard, Alert, Image } from 'react-native';
 import { Button, Block, NavBar, Text, theme, Button as GaButton } from 'galio-framework';
 
 import Icon from './Icon';
@@ -8,6 +8,7 @@ import Input from './Input';
 import Tabs from './Tabs';
 import nowTheme from '../constants/Theme';
 import { AuthContext } from '../constants/AuthContext';
+import Images from '../constants/Images';
 
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () =>
@@ -39,6 +40,17 @@ const BasketButton = ({ isWhite, style, navigation }) => (
   </TouchableOpacity>
 );
 
+const Logout = ({ isWhite, style, navigation, logoutClick }) => (
+  <TouchableOpacity style={[styles.button, style]} onPress={() => logoutClick()}>
+    <Icon
+      family="NowExtra"
+      size={16}
+      name="share"
+      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+    />
+  </TouchableOpacity>
+);
+
 
 
 function Header (
@@ -52,6 +64,7 @@ function Header (
     titleColor,
     navigation,
     logout,
+    logo,
     options,
     optionLeft,
     optionRight,
@@ -82,10 +95,22 @@ function Header (
     if (back) {
       return 'minimal-left2x'
     } else if (logout) {
-      return 'share'
+      return null
     } else {
       return 'align-left-22x'
     }
+  }
+
+  const logoutClick = () => {
+    Alert.alert(
+      "Are you sure you want to log out?",
+      "None of your account information will be saved if you log out during setup.",
+      [
+        { text: "Logout", onPress: () => setUser() },
+        { text: "Finish Setup", onPress: () => console.log("Cancel pressed")},
+      ],
+      { cancelable: false }
+    );
   }
 
   const renderRight = () => {
@@ -141,6 +166,10 @@ function Header (
         return [
           <BellButton key="chat-search" navigation={navigation} isWhite={white} />,
           <BasketButton key="basket-search" navigation={navigation} isWhite={white} />
+        ];
+      case 'Account Setup':
+        return [
+          <Logout key="chat-search" navigation={navigation} isWhite={white} logoutClick={logoutClick} />,
         ];
       default:
         break;
@@ -202,7 +231,7 @@ function Header (
   };
 
   const renderTabs = () => {
-    const { tabs, tabIndex, navigation } = props;
+    const { tabs, tabIndex } = props;
     const defaultTab = tabs && tabs[0] && tabs[0].id;
 
     if (!tabs) return null;
@@ -246,8 +275,7 @@ function Header (
           transparent={transparent}
           right={renderRight()}
           rightStyle={{ alignItems: 'center' }}
-          left={
-            <Icon
+          left={<Icon
               name={renderLeftIcon()}
               family="NowExtra"
               size={16}

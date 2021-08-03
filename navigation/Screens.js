@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // screens
 import Home from '../screens/Home';
 import Pro from '../screens/Pro';
+import Setup from '../screens/Setup/Settings.js';
 import Profile from '../screens/Profile';
 import Timeline from "../screens/Timeline";
 import Friends from "../screens/Friends";
@@ -143,11 +144,14 @@ function HomeStack(props) {
       <Stack.Navigator mode='card' headerMode='screen'>
         {!user.hasOwnProperty('domestic') && <Stack.Screen
           name='Account Setup'
-          component={Pro}
+          component={Setup}
           options={{
             header: ({ navigation, scene }) => (
               <Header
                 title='Account Setup'
+                white
+                logo
+                bgColor={nowTheme.COLORS.PRIMARY}
                 logout
                 navigation={navigation}
                 scene={scene}

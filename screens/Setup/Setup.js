@@ -10,12 +10,11 @@ import { Block, Button, Text, theme } from "galio-framework";
 
 const { height, width } = Dimensions.get("screen");
 
-import nowTheme from "../constants/Theme";
-import Images from "../constants/Images";
+import nowTheme from "../../constants/Theme";
+import Images from "../../constants/Images";
 
-class Pro extends React.Component {
-  render() {
-    const { navigation } = this.props;
+function Setup(props) {
+    const { navigation } = props;
 
     return (
       <Block flex style={styles.container}>
@@ -89,7 +88,6 @@ class Pro extends React.Component {
         </Block>
       </Block>
     );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -128,4 +126,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Pro;
+export default Setup;
