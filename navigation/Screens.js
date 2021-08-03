@@ -136,43 +136,47 @@ function ProfileStack(props) {
 }
 
 function HomeStack(props) {
-  return (
-    <Stack.Navigator mode="card" headerMode="screen">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title="Home"
-              search
-              options
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: "#FFFFFF" }
-        }}
-      />
-      <Stack.Screen
-        name="Pro"
-        component={Pro}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=""
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true
-        }}
-      />
-    </Stack.Navigator>
-  );
+  const { user } = useContext(AuthContext);
+
+  if (user) {
+    return (
+      <Stack.Navigator mode='card' headerMode='screen'>
+        {!user.hasOwnProperty('domestic') && <Stack.Screen
+          name='Account Setup'
+          component={Pro}
+          options={{
+            header: ({ navigation, scene }) => (
+              <Header
+                title='Account Setup'
+                logout
+                navigation={navigation}
+                scene={scene}
+              />
+            ),
+            headerTransparent: true
+          }}
+        />}
+        <Stack.Screen
+          name='Home'
+          component={Home}
+          options={{
+            header: ({ navigation, scene }) => (
+              <Header
+                title='Home'
+                search
+                options
+                navigation={navigation}
+                scene={scene}
+              />
+            ),
+            cardStyle: { backgroundColor: '#FFFFFF' }
+          }}
+        />
+      </Stack.Navigator>
+    );
+  } else {
+    return null;
+  }
 }
 
 function FriendsStack(props) {
