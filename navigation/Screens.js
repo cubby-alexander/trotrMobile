@@ -14,8 +14,8 @@ import Friends from "../screens/Friends";
 import Travel from "../screens/Travel";
 import Components from '../screens/Components';
 import Articles from '../screens/Articles';
-import Onboarding from '../screens/Onboarding';
-import SignUp from '../screens/SignUp';
+import Onboarding from '../screens/Onboarding/Onboarding';
+import SignUp from '../screens/SignUp/SignUp';
 import SettingsScreen from '../screens/Settings';
 // drawer
 import CustomDrawerContent from "./Menu";

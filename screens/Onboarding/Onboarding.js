@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../constants/AuthContext';
+import { AuthContext } from '../../constants/AuthContext';
 import JWT from "expo-jwt";
-import { clearData, storeData } from '../helpers/tokenStorage';
+import { clearData, storeData } from '../../helpers/tokenStorage';
 import {JWT_SECRET, BACKEND_URL} from "@env";
 import axios from "axios";
 import {
@@ -10,15 +10,16 @@ import {
   StyleSheet,
   StatusBar,
   Dimensions,
+  Alert,
   Platform,
   TouchableWithoutFeedback, TouchableNativeFeedback
 } from 'react-native';
 import { Block, Button as GaButton, Button, Checkbox, Text, theme } from 'galio-framework';
 
 const { height, width } = Dimensions.get('screen');
-import { Images, nowTheme } from '../constants';
-import { HeaderHeight } from '../constants/utils';
-import { Icon, Input } from '../components';
+import { Images, nowTheme } from '../../constants';
+import {onboardingStyles} from "./onboardingStyles";
+import { Icon, Input } from '../../components';
 
 export default function Onboarding({navigation}) {
   const [signIn, setSignIn] = useState({
@@ -33,17 +34,26 @@ export default function Onboarding({navigation}) {
       "Access-Control-Allow-Origin": "*",
     };
     let user = {
-      email: "hall@gmail.com",
-      password: "ron"
+      email: "hall@gmail.com",  //signIn.email,
+      password: "ron"          //signIn.password
     };
     try {
       await axios.post(`${BACKEND_URL}user/login`, user, axiosConfig)
         .then((res) => {
-          if (res.data.token) {
+          if (res.data.message === "Login successful") {
             const decoded = JWT.decode(res.data.token, JWT_SECRET);
             storeData(decoded);
             setUser(decoded);
-        }})
+        } else if (res.data.message === "User email or password incorrect.") {
+            Alert.alert(
+              "Sign in failed",
+              "User email or password incorrect.",
+              [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+              ],
+              { cancelable: false }
+            );
+          }})
     } catch (e) {
       console.log(e);
     }
@@ -51,63 +61,7 @@ export default function Onboarding({navigation}) {
 
   const globalTokenVariable = "not_arbitrary";
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: theme.COLORS.BLACK,
-      marginTop: Platform.OS === 'android' ? -HeaderHeight : 0,
-    },
-    registerContainer: {
-      marginTop: height * 0.05,
-      width: width * 0.87,
-      height: height < 812 ? height * 0.5 : height * 0.55,
-      backgroundColor: nowTheme.COLORS.WHITE,
-      borderRadius: 4,
-      shadowColor: nowTheme.COLORS.BLACK,
-      shadowOffset: {
-        width: 0,
-        height: 4
-      },
-      shadowRadius: 8,
-      shadowOpacity: 0.1,
-      elevation: 1,
-      overflow: 'hidden'
-    },
-    padded: {
-      paddingHorizontal: theme.SIZES.BASE * 2,
-      zIndex: 3,
-      position: 'absolute',
-      bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 8
-    },
-    logo: { width: 365, height: 124, bottom: 10, left: 0, right: 0, position: 'absolute' },
-    button: {
-      width: width - theme.SIZES.BASE * 4,
-      height: theme.SIZES.BASE * 3,
-      shadowRadius: 0,
-      shadowOpacity: 0
-    },
-    inputs: {
-      borderWidth: 1,
-      borderColor: '#E3E3E3',
-      borderRadius: 21.5
-    },
-    inputIcons: {
-      marginRight: 12,
-      color: nowTheme.COLORS.ICON_INPUT
-    },
-    createButton: {
-      width: width * 0.5,
-      marginTop: 25,
-      marginBottom: 30
-    },
-    gradient: {
-      zIndex: 1,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 66
-    }
-  });
+  const styles = StyleSheet.create(onboardingStyles);
 
     return (
       <Block flex style={styles.container}>
@@ -221,7 +175,7 @@ export default function Onboarding({navigation}) {
                           onPress={() => navigation.navigate('Resend')}
                         >
                           <Text
-                            style={{fontFamily: 'proxima-nova', color: 'blue', fontSize: 15}}
+                            style={{fontFamily: 'proxima-nova', color: nowTheme.COLORS.PRIMARY, fontSize: 15}}
                           >
                             I forgot my account email or password.
                           </Text>
@@ -243,7 +197,7 @@ export default function Onboarding({navigation}) {
                             onPress={() => navigation.navigate('SignUp')}
                           >
                             <Text
-                              style={{ fontFamily: 'proxima-nova', color: 'blue' }}
+                              style={{ fontFamily: 'proxima-nova', color: nowTheme.COLORS.PRIMARY }}
                               size={16}
                             >
                                Sign up.
