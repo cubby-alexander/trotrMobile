@@ -142,7 +142,7 @@ function HomeStack(props) {
   if (user) {
     return (
       <Stack.Navigator mode='card' headerMode='screen'>
-        {!user.hasOwnProperty('domestic') && <Stack.Screen
+        {user.hasOwnProperty('domestic') && <Stack.Screen
           name='Account Setup'
           component={Setup}
           options={{

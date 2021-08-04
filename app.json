@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Now UI React Native",
-    "slug": "now-ui-react-native",
+    "name": "Trotr",
+    "slug": "trotr",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -12,8 +12,8 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "contain",
+      "backgroundColor": "#004643"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,8 +22,10 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
-    "description": "Now UI React Native, based on Now UI Design System. Coded by Creative Tim"
+    "description": "Social activity media that helps you connect with people, in person."
   }
 }
