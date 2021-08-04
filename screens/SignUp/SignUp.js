@@ -241,9 +241,8 @@ export default function SignUp(props) {
                         <Block flex={0.8} style={{marginTop: height * 0.02}}>
                           {errorMessages.map((error, idx) => {
                             return (
-                              <Block width={width * 0.7} style={{marginBottom: height * 0.02, marginLeft: width * 0.05}}>
+                              <Block key={idx} width={width * 0.7} style={{marginBottom: height * 0.02, marginLeft: width * 0.05}}>
                                 <Text
-                                  key={idx}
                                   style={{fontFamily: 'proxima-nova'}}
                                   size={16}
                                 >{error}</Text>
